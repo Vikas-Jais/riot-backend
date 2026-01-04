@@ -2,10 +2,19 @@ import "dotenv/config";
 import express from "express";
 import axios from "axios";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Required for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// 🔥 THIS LINE MAKES riot.txt PUBLIC
+app.use(express.static(__dirname));
 
 const RIOT_KEY = process.env.RIOT_API_KEY;
 
@@ -51,7 +60,7 @@ app.get("/verify/:name/:tag", async (req, res) => {
   }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🔥 Riot backend running on port ${PORT}`);
 });
